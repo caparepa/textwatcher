@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.h2g2.textwatcher.databinding.ActivityMainBinding;
 
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private char localGroupingSeparator;
     private int count = 0;
 
+    private TextView inputText, numericText, parsedText, currentText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         LanguageManager.saveLanguage(languageCode, this);
 
         et = binding.numberField;
+        inputText = binding.inputValue;
+        numericText = binding.numericValue;
+        parsedText = binding.parsedValue;
+        currentText = binding.currentValue;
 
         updateLanguageOptions();
 
@@ -59,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         et.setFilters(filters);
         et.setText(inputInit); //piedra solutions
         et.setSelection(4);
+
         //set text with fucking format!
         //set selection after the items on start!
-
 
         /*final NumberInputTextWatcher nw = new NumberInputTextWatcher(et, localDecimalSeparator, localGroupingSeparator, currentLocale);
         et.addTextChangedListener(new NumberInputTextWatcher(){
