@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private char localDecimalSeparator;
     private char localGroupingSeparator;
     private int count = 0;
+    private int startChanged;
+    private int beforeChanged;
+    private int countChanged;
+    private String current = "";
 
     private TextView inputText, numericText, parsedText, currentText;
 
@@ -59,34 +65,16 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Current locale for number shit: " + currentLocale);
 
         //TODO: set input shit
-        String inputInit = "0" + localDecimalSeparator + "00";
+        //String inputInit = "0" + localDecimalSeparator + "00";
         Editable priceText = et.getText();
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(16); //Filter to 10 characters
         et.setFilters(filters);
-        et.setText(inputInit); //piedra solutions
-        et.setSelection(4);
+        //et.setText(inputInit); //piedra solutions
+        //et.setSelection(4);
 
         //set text with fucking format!
         //set selection after the items on start!
-
-        /*final NumberInputTextWatcher nw = new NumberInputTextWatcher(et, localDecimalSeparator, localGroupingSeparator, currentLocale);
-        et.addTextChangedListener(new NumberInputTextWatcher(){
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int after) {
-                nw.onTextChanged(s, start, before, after);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                nw.beforeTextChanged(s, start, count, after);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                nw.afterTextChanged(s);
-            }
-        });*/
         final PriceInputTextWatcher ctw = new PriceInputTextWatcher(et, localDecimalSeparator, localGroupingSeparator, currentLocale);
         et.addTextChangedListener(new PriceInputTextWatcher() {
             @Override

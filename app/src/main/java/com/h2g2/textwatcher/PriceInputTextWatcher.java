@@ -40,6 +40,7 @@ public class PriceInputTextWatcher implements TextWatcher {
     private int digits, oSize;
     private Double valor;
 
+
     public PriceInputTextWatcher() {
     }
 
@@ -59,7 +60,7 @@ public class PriceInputTextWatcher implements TextWatcher {
         startChanged = start;
         beforeChanged = before;
         countChanged = count;
-
+        //TODO: test shit here separately!
         /*if (!s.toString().equals(current) && !s.toString().equals(empty)) {
             et.removeTextChangedListener(this);
 
@@ -89,15 +90,14 @@ public class PriceInputTextWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        index = after > 0 ? s.length() - start : s.length() - start - 1;
-        deletingDecimalPoint = count > 0 && s.charAt(start) == localDecimalSeparator;
+        //do nothing
     }
 
     @Override
     public synchronized void afterTextChanged(Editable s) {
+        //TODO: test shit here!
         /*if (!s.toString().equals(current)) {
             et.removeTextChangedListener(this);
-            Log.d("SHIT", "current " + s.toString());
 
             oString = s.toString().replaceAll(regex, "");
             oSize = oString.length();

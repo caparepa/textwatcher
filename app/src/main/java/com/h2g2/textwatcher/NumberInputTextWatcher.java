@@ -46,43 +46,19 @@ public class NumberInputTextWatcher implements TextWatcher {
         this.regex = "[" + this.DECIMAL_SEPARATOR + this.GROUPING_SEPARATOR + "]";
     }
 
-    private boolean updating = false;
-
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int after) {
-        if (!s.toString().equals(current)) {
-            et.removeTextChangedListener(this);
-
-            String cleanString = s.toString();
-
-            if (after != 0) {
-                String substr = cleanString.substring(cleanString.length() - 2);
-
-                if (substr.contains(".") || substr.contains(",")) {
-                    cleanString += "0";
-                }
-            }
-
-            cleanString = cleanString.replaceAll("["+DECIMAL_SEPARATOR+GROUPING_SEPARATOR+"]", "");
-
-            double parsed = Double.parseDouble(cleanString);
-            DecimalFormat df = new DecimalFormat("0.00");
-            String formatted = df.format((parsed / 100));
-
-            current = formatted;
-            et.setText(formatted);
-            et.setSelection(formatted.length());
-
-            et.addTextChangedListener(this);
-        }
+        //do nothing?
     }
 
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        //do shit here?
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        //do shit here?
     }
 }
