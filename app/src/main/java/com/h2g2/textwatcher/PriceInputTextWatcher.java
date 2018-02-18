@@ -29,7 +29,7 @@ public class PriceInputTextWatcher implements TextWatcher {
     private String current = "";
     private Locale currentLocale;
     private int fractionDigits = 2;
-    NumberFormat formatter;
+    private NumberFormat formatter;
     private String regex;
     private double v_value = 0;
     private String v_formattedValue;
@@ -60,32 +60,7 @@ public class PriceInputTextWatcher implements TextWatcher {
         startChanged = start;
         beforeChanged = before;
         countChanged = count;
-        //TODO: test shit here separately!
-        /*if (!s.toString().equals(current) && !s.toString().equals(empty)) {
-            et.removeTextChangedListener(this);
 
-            String cleanString = s.toString();
-
-            if (count != 0 && count > 2) {
-                String substr = cleanString.substring(cleanString.length() - 2);
-
-                if (substr.contains(Character.toString(localDecimalSeparator)) ||
-                        substr.contains(Character.toString(localGroupingSeparator))) {
-                    cleanString += "0";
-                }
-            }
-
-            cleanString = cleanString.replaceAll(regex, "");
-
-            Double parsed = new Double(cleanString);
-            Double value = parsed / 100;
-            String formatted = formatter.format(value);
-            current = formatted;
-
-            et.setText(formatted);
-            et.setSelection(formatted.length());
-            et.addTextChangedListener(this);
-        }*/
     }
 
     @Override
@@ -95,51 +70,6 @@ public class PriceInputTextWatcher implements TextWatcher {
 
     @Override
     public synchronized void afterTextChanged(Editable s) {
-        //TODO: test shit here!
-        /*if (!s.toString().equals(current)) {
-            et.removeTextChangedListener(this);
-
-            oString = s.toString().replaceAll(regex, "");
-            oSize = oString.length();
-
-            //acomodar esta shit
-            valor = Double.valueOf(oString);
-            valor = valor / 100;
-
-            fString = new StringBuffer(String.valueOf(valor.toString()));
-
-            //usar esta mierda de nuevo
-            digits = oSize - (fString.length() - 1);
-            if (digits > 0) {
-                for (int i = 0; i < digits; i++) {
-                    fString.append("0");
-                }
-            }
-
-            if (fString.toString().equals("0")) {
-                while (fString.length() < 3) {
-                    fString.insert(0, '0');
-                }
-                fString.insert(fString.length() - 2, localDecimalSeparator);
-            }
-            Log.d("SHIT2", fString.toString());
-
-            v_formattedValue = formatter.format(Double.valueOf(fString.toString()));
-            current = v_formattedValue;
-
-            //set text
-            et.setText(v_formattedValue);
-
-            //set selection index...
-            int selectionIndex = index > v_formattedValue.length() ?
-                    v_formattedValue.length() : v_formattedValue.length() - index;
-            et.setSelection(selectionIndex);
-
-            // set cursor to the end after text is formatted
-            et.setSelection(startChanged + countChanged);
-
-            et.addTextChangedListener(this);
-        }*/
 
         if (!s.toString().equals(current)) {
             et.removeTextChangedListener(this);

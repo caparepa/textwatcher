@@ -27,13 +27,12 @@ public class MainActivity extends AppCompatActivity {
     Locale currentLocale;
     String languageCode;
 
-    private static final Set<String> troubleLanguages = new HashSet<String>(Arrays.asList(
+    private static final Set<String> troubleLanguages = new HashSet<>(Arrays.asList(
             new String[]{"fr", "ru", "ar", "uk"}
     ));
 
     private final String numbers = "1234567890";
     private String acceptedDigits;
-    //private char localDecimalSeparator ='.';
     private DecimalFormatSymbols localDecimalFormatSymbols;
     private char localDecimalSeparator;
     private char localGroupingSeparator;
@@ -63,37 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
         updateLanguageOptions();
 
-        System.out.println("Current locale for number shit: " + currentLocale);
-
-        //TODO: set input shit
         String inputInit = "0" + localDecimalSeparator + "00";
         Editable priceText = et.getText();
         InputFilter[] filters = new InputFilter[1];
-        filters[0] = new InputFilter.LengthFilter(16); //Filter to 10 characters
+        filters[0] = new InputFilter.LengthFilter(16);
         et.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         et.setFilters(filters);
-        et.setText(inputInit); //piedra solutions
+        et.setText(inputInit);
         et.setSelection(inputInit.length());
-
-        //set text with fucking format!
-        //set selection after the items on start!
-        //final PriceInputTextWatcher ctw = new PriceInputTextWatcher(et, localDecimalSeparator, localGroupingSeparator, currentLocale);
-        /*et.addTextChangedListener(new PriceInputTextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                ctw.beforeTextChanged(s, start, count, after);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ctw.onTextChanged(s, start, before, count);
-            }
-
-            @Override
-            public synchronized void afterTextChanged(Editable s) {
-                ctw.afterTextChanged(s);
-            }
-        });*/
 
         final NumberInputTextWatcher itw = new NumberInputTextWatcher(et, localDecimalSeparator, localGroupingSeparator, currentLocale);
         et.addTextChangedListener(new NumberInputTextWatcher(){
@@ -114,12 +90,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: UPDATE TO HANDLE LANGUAGES WITHOUT GROUPING SEPARATOR!
+    //TODO: patch up things here...
     private void updateLanguageOptions() {
         currentLocale = LanguageManager.getCurrentLocale(this);
-        //TODO: add this shit to the formlist adapter
         if (troubleLanguages.contains(currentLocale.getLanguage())) {
-            currentLocale = new Locale("es"); //TODO: watch out!
+            currentLocale = new Locale("es");
         }
         localDecimalFormatSymbols = new DecimalFormatSymbols(currentLocale);
         localDecimalSeparator = localDecimalFormatSymbols.getDecimalSeparator();

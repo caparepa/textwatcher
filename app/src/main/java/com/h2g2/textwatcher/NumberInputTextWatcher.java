@@ -19,19 +19,12 @@ import java.util.Locale;
 public class NumberInputTextWatcher implements TextWatcher {
 
     private Locale DEFAULT_LOCALE;
-
     private DecimalFormat NUMBER_FORMAT;
-
     private int FRACTION_DIGITS = 2;
-
     private char DECIMAL_SEPARATOR;
-
     private char GROUPING_SEPARATOR;
-
     private EditText et;
-
     private String regex;
-
     private String current = "";
 
     private int startChanged;
@@ -39,7 +32,13 @@ public class NumberInputTextWatcher implements TextWatcher {
     private int countChanged;
     private int index;
     private boolean busy = false;
-
+    private int DECIMAL_CHAR_INDEX;
+    private int place;
+    private StringBuilder num, str;
+    private String v_text, v_formatted;
+    private int count;
+    private char c;
+    private BigDecimal v_value;
     private NumberFormat formatter;
 
     public NumberInputTextWatcher() {
@@ -55,12 +54,12 @@ public class NumberInputTextWatcher implements TextWatcher {
         this.regex = "[" + this.DECIMAL_SEPARATOR + this.GROUPING_SEPARATOR + "]";
         this.formatter = NumberFormat.getNumberInstance(DEFAULT_LOCALE);
         formatter.setMaximumFractionDigits(2);
-        this.regex = "[" + this.DECIMAL_SEPARATOR + this.GROUPING_SEPARATOR+ "]";
+        this.regex = "[" + this.DECIMAL_SEPARATOR + this.GROUPING_SEPARATOR + "]";
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        //
+        //TODO: check whether this is really being used effectively
         startChanged = start;
         beforeChanged = before;
         countChanged = count;
@@ -70,93 +69,84 @@ public class NumberInputTextWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        //Do nothing here
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        //do shit here?
         if (!s.toString().equals(current)) {
             et.removeTextChangedListener(this);
 
-            String v_text = s.toString().replaceAll(regex, "");
-            BigDecimal v_value = new BigDecimal(0);
+            //Delete all decimal and grouping characters
+            v_text = s.toString().replaceAll(regex, "");
+            v_value = new BigDecimal(0);
 
-            //TODO: try with double instead of bigdecimal!
-            if (v_text != null && v_text.length() > 0)
+            //Set value with BigDecimal instead of Double (for precision)
+            if (v_text != null && v_text.length() > 0) {
                 v_value = new BigDecimal(v_text)
-                        .setScale(2,BigDecimal.ROUND_FLOOR)
-                        .divide(new BigDecimal(100),BigDecimal.ROUND_FLOOR);
-
-            String v_formattedValue = NUMBER_FORMAT.format(v_value);
-
-            //Make a stringbuilder with the resulting format
-            StringBuilder num = new StringBuilder(v_formattedValue);
-
-            //TODO: check border cases here!
-            //this is only to get the zero value as 0.00!
-            if (num.toString().equals("0")) {
-                while (num.length() < 3)
-                    num.insert(0, '0');
-                num.insert(num.length() - 2, DECIMAL_SEPARATOR);
+                        .setScale(2, BigDecimal.ROUND_FLOOR)
+                        .divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR);
             }
-            Log.d("STRING_",num.toString());
 
-            /**
-             * new code begin
-             */
-            if (s != null && !busy) {
+            //Set formatted value and make string builder
+            v_formatted = NUMBER_FORMAT.format(v_value);
+            num = new StringBuilder(v_formatted);
+
+            //Set ending zero-value
+            setEndingZeroValue();
+
+            //Piedra Solutions, Inc. (just some Frankencode, adapted from a Kotlin excerpt
+            //Source: https://stackoverflow.com/a/45993013
+            if (!busy) {
                 busy = true;
+                place = 0;
+                str = num;
 
-                int place = 0;
-                StringBuilder str = num;
-                //StringBuilder str = new StringBuilder(s);
-                //String str = s.toString();
-                int decimalPointIndex = str.indexOf(String.valueOf(DECIMAL_SEPARATOR));
-                int i;
-                if (decimalPointIndex == -1) {
-                    i= str.length() - 1;
+                DECIMAL_CHAR_INDEX = str.indexOf(String.valueOf(DECIMAL_SEPARATOR));
+                if (DECIMAL_CHAR_INDEX == -1) {
+                    count = str.length() - 1;
                 } else {
-                    i = decimalPointIndex - 1;
+                    count = DECIMAL_CHAR_INDEX - 1;
                 }
 
-                while (i >= 0) {
-                    char c = s.charAt(i);
+                while (count >= 0) {
+                    c = str.charAt(count);
                     if (c == GROUPING_SEPARATOR) {
-                        str.delete(i, i + 1);
+                        str.delete(count, count + 1);
                     } else {
                         if (place % 3 == 0 && place != 0) {
                             // insert a comma to the left of every 3rd digit (counting from right to
                             // left) unless it's the leftmost digit
-                            str.insert(i + 1, String.valueOf(GROUPING_SEPARATOR));
+                            str.insert(count + 1, String.valueOf(GROUPING_SEPARATOR));
                         }
                         place++;
                     }
-                    i--;
+                    count--;
                 }
-                Log.d("STRING_",str.toString());
+                Log.d("STRING_", str.toString());
                 num = str;
                 busy = false;
             }
-            /**
-             * new code end
-             */
 
             //assign values
-            v_formattedValue = num.toString();
-            current = v_formattedValue;
+            v_formatted = num.toString();
+            current = v_formatted;
 
-            //set text
-            et.setText(v_formattedValue);
-
-            //set selection index...
-            /*int selectionIndex = index > v_formattedValue.length() ?
-                    v_formattedValue.length() : v_formattedValue.length() - index;*/
-            et.setSelection(v_formattedValue.length());
+            //set text and selection
+            et.setText(v_formatted);
+            et.setSelection(v_formatted.length());
 
             // set cursor to the end after text is formatted
             et.setSelection(startChanged + countChanged);
             et.addTextChangedListener(this);
+        }
+    }
+
+    private void setEndingZeroValue() {
+        if (num.toString().equals("0")) {
+            while (num.length() < 3)
+                num.insert(0, '0');
+            num.insert(num.length() - 2, DECIMAL_SEPARATOR);
         }
     }
 }
