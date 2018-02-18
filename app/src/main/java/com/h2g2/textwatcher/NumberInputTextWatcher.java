@@ -82,6 +82,7 @@ public class NumberInputTextWatcher implements TextWatcher {
             String v_text = s.toString().replaceAll(regex, "");
             BigDecimal v_value = new BigDecimal(0);
 
+            //TODO: try with double instead of bigdecimal!
             if (v_text != null && v_text.length() > 0)
                 v_value = new BigDecimal(v_text)
                         .setScale(2,BigDecimal.ROUND_FLOOR)
@@ -99,6 +100,47 @@ public class NumberInputTextWatcher implements TextWatcher {
                     num.insert(0, '0');
                 num.insert(num.length() - 2, DECIMAL_SEPARATOR);
             }
+            Log.d("STRING_",num.toString());
+
+            /**
+             * new code begin
+             */
+            if (s != null && !busy) {
+                busy = true;
+
+                int place = 0;
+                StringBuilder str = num;
+                //StringBuilder str = new StringBuilder(s);
+                //String str = s.toString();
+                int decimalPointIndex = str.indexOf(String.valueOf(DECIMAL_SEPARATOR));
+                int i;
+                if (decimalPointIndex == -1) {
+                    i= str.length() - 1;
+                } else {
+                    i = decimalPointIndex - 1;
+                }
+
+                while (i >= 0) {
+                    char c = s.charAt(i);
+                    if (c == GROUPING_SEPARATOR) {
+                        str.delete(i, i + 1);
+                    } else {
+                        if (place % 3 == 0 && place != 0) {
+                            // insert a comma to the left of every 3rd digit (counting from right to
+                            // left) unless it's the leftmost digit
+                            str.insert(i + 1, String.valueOf(GROUPING_SEPARATOR));
+                        }
+                        place++;
+                    }
+                    i--;
+                }
+                Log.d("STRING_",str.toString());
+                num = str;
+                busy = false;
+            }
+            /**
+             * new code end
+             */
 
             //assign values
             v_formattedValue = num.toString();
@@ -108,9 +150,9 @@ public class NumberInputTextWatcher implements TextWatcher {
             et.setText(v_formattedValue);
 
             //set selection index...
-            int selectionIndex = index > v_formattedValue.length() ?
-                    v_formattedValue.length() : v_formattedValue.length() - index;
-            et.setSelection(selectionIndex);
+            /*int selectionIndex = index > v_formattedValue.length() ?
+                    v_formattedValue.length() : v_formattedValue.length() - index;*/
+            et.setSelection(v_formattedValue.length());
 
             // set cursor to the end after text is formatted
             et.setSelection(startChanged + countChanged);
