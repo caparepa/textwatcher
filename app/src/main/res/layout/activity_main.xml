@@ -22,40 +22,17 @@
             tools:layout_editor_absoluteX="85dp"
             tools:layout_editor_absoluteY="186dp" />
 
-        <TextView
-            android:id="@+id/inputValue"
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/numberField"
             android:layout_below="@+id/numberField"
-            android:layout_marginTop="32dp"
-            android:text="InputlValue" />
+            android:layout_marginTop="43dp"
+            android:ems="16"
+            android:inputType="textPersonName"
+            android:text="Name" />
 
-        <TextView
-            android:id="@+id/currentValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/parsedValue"
-            android:layout_centerVertical="true"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/numericValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/inputValue"
-            android:layout_below="@+id/inputValue"
-            android:layout_marginTop="32dp"
-            android:text="NumericValue" />
-
-        <TextView
-            android:id="@+id/parsedValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/numericValue"
-            android:layout_below="@+id/numericValue"
-            android:layout_marginTop="32dp"
-            android:text="ParsedValue" />
 
     </RelativeLayout>
 
